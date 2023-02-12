@@ -15,7 +15,9 @@ app.get('/', (req, res) => {
     res.write(`It's a weekend`);
     res.send();
   } else {
-    res.send(`It's a weekday`);
+    res.write(`It's a weekday`);
+    res.write('We need to work for sure');
+    res.send();
   }
 });
 
