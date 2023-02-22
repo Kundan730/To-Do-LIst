@@ -2,14 +2,50 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const date = require(__dirname + '/date.js');
 require('dotenv').config();
+const mongoose = require('mongoose');
 
-console.log(date.getDay());
+console.log(date.getDate());
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-const items = ['Buy Food', 'Cook Food', 'Eat Food'];
-const workItem = [];
+mongoose.set('strictQuery', false);
+mongoose.connect("mongodb://127.0.0.1:27017/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true})
+.then( () => console.log("Connected to MongoDB"))
+.catch( (err) => console.log(err));
+
+const Schema = mongoose.Schema;
+
+const itemsSchema = new Schema({
+  name: {type: String, required: true}
+});
+
+const Item = mongoose.model('item', itemsSchema);
+
+const item1 = new Item({
+  name: 'Welcome to your todolist.'
+});
+
+const item2 = new Item({
+  name: "Hit the + button to add a new item."
+});
+
+const item3 = new Item({
+  name: '<-- hit this to delete an item.'
+});
+
+const defaultItems = [item1, item2, item3];
+
+// Item.deleteMany({}, (err) => {
+//   if(err) {
+//     console.log(err);
+//   } else {
+//     console.log('Successfully deleted all the documents');
+//   }
+// });
+
+// const items = ['Buy Food', 'Cook Food', 'Eat Food'];
+// const workItem = [];
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -22,7 +58,22 @@ app.get('/', (req, res) => {
 
   const day = date.getDate();
 
-  res.render('list', {listTitle: day, newListItem: items});
+  Item.find({}, (err, foundItems) => {
+    if(foundItems.length === 0) {
+      Item.insertMany(defaultItems, (err) => {
+        if(err) {
+          console.log(err);
+        } else {
+          console.log('Successfully inserted the documents');
+        }
+      });
+      res.redirect('/');
+    } else {
+      res.render('list', {listTitle: day, newListItem: foundItems});
+    }
+  });
+
+  // res.render('list', {listTitle: day, newListItem: items});
 
     // let currentDay = today.getDay();
   // let day = '';  
@@ -56,14 +107,27 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
   console.log(req.body);
-  const item = req.body.addItem;
-  if(req.body.list === "Work List") {
-    workItem.push(item);
-    res.redirect('/work');
-  } else {
-    items.push(item);
-    res.redirect('/');
-  }
+
+  const itemName = req.body.addItem;
+
+  const item = new Item({
+    name: itemName
+  });
+
+  item.save();
+
+  res.redirect('/');
+  
+  // const item = req.body.addItem;
+
+  // if(req.body.list === "Work List") {
+  //   workItem.push(item);
+  //   res.redirect('/work');
+  // } else {
+  //   items.push(item);
+  //   res.redirect('/');
+  // }
+
 });
 
 app.get('/work', (req, res) => {
