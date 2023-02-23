@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 
 mongoose.set("strictQuery", false);
 mongoose
-  .connect("mongodb://127.0.0.1:27017/todolistDB", {
+  .connect("mongodb+srv://Kundan7:IXMJF9788JTJBmnP@cluster0.sk1g6fg.mongodb.net/todolistDB", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
