@@ -130,6 +130,21 @@ app.post('/', (req, res) => {
 
 });
 
+app.post('/delete', (req, res) => {
+  const checkedItemId = req.body.checkBox.trim(); // remove leading/trailing spaces
+  const itemId = mongoose.Types.ObjectId(checkedItemId);
+  console.log(itemId);
+  // console.log(checkedItemId);
+  Item.findByIdAndRemove(itemId, (err) => {
+    if(err) {
+      console.log(err);
+    } else {
+      console.log('Successfully deleted the document');
+      res.redirect('/');
+    }
+  });
+});
+
 app.get('/work', (req, res) => {
   res.render('list', {listTitle: 'Work List', newListItem: workItem});
 });
