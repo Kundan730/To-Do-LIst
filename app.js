@@ -36,6 +36,13 @@ const item3 = new Item({
 
 const defaultItems = [item1, item2, item3];
 
+const listSchema = new Schema({
+  name: String,
+  items: [itemsSchema]
+});
+
+const List = mongoose.model('list', listSchema);
+
 // Item.deleteMany({}, (err) => {
 //   if(err) {
 //     console.log(err);
@@ -105,6 +112,29 @@ app.get('/', (req, res) => {
 
 });
 
+app.get('/:listTitle', (req, res) => {
+
+  const listTitle = req.params.listTitle;
+
+  List.findOne({name: listTitle}, (err, foundList) => {
+    if(!err) {
+      if(!foundList) {
+        //Create a new list
+        const list = new List({
+          name: listTitle,
+          items: defaultItems
+        });
+      
+        list.save();
+        res.redirect(`/${listTitle}`);
+      } else{
+        //Show an existing list
+        res.render('list', {listTitle: foundList.name, newListItem: foundList.items});
+      }
+    }
+  });
+});
+
 app.post('/', (req, res) => {
   console.log(req.body);
 
@@ -145,9 +175,14 @@ app.post('/delete', (req, res) => {
   });
 });
 
-app.get('/work', (req, res) => {
-  res.render('list', {listTitle: 'Work List', newListItem: workItem});
-});
+// app.get('/work/:listTitle', (req, res) => {
+//   const listTitle = req.params.listTitle;
+  // res.render('list', {listTitle: listTitle, newListItem: workItem});
+// });
+
+// app.get('/work', (req, res) => {
+  // res.render('list', {listTitle: 'Work List', newListItem: workItem});
+// });
 
 app.post('/work', (req, res) => {
   const item = req.body.addItem;
