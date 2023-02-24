@@ -23,7 +23,7 @@ console.log(password);
 
 mongoose
   .connect(
-    `mongodb+srv://Kundan7:${password}@cluster0.sk1g6fg.mongodb.net/todolistDB`,
+    `mongodb+srv://Flash7:${password}@cluster0.sk1g6fg.mongodb.net/todolistDB`,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
