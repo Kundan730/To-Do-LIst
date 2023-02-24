@@ -3,21 +3,31 @@ const bodyParser = require("body-parser");
 const date = require(__dirname + "/date.js");
 require("dotenv").config();
 const mongoose = require("mongoose");
-const _ = require('lodash');
+const _ = require("lodash");
 
 console.log(date.getDate());
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.static("public"));
+
+app.set("views", "./views");
+app.set("view engine", "ejs");
+
 mongoose.set("strictQuery", false);
 const password = process.env.PASS;
 
 mongoose
-  .connect(`mongodb+srv://Kundan7:${password}@cluster0.sk1g6fg.mongodb.net/todolistDB`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    `mongodb+srv://Kundan7:${password}@cluster0.sk1g6fg.mongodb.net/todolistDB`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
 
@@ -60,15 +70,6 @@ const List = mongoose.model("list", listSchema);
 
 // const items = ['Buy Food', 'Cook Food', 'Eat Food'];
 // const workItem = [];
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(express.static("public"));
-
-app.set("views", "./views");
-app.set("view engine", "ejs");
-
-const day = date.getDate();
 
 app.get("/", (req, res) => {
   Item.find({}, (err, foundItems) => {
@@ -217,11 +218,11 @@ app.post("/delete", (req, res) => {
 // res.render('list', {listTitle: 'Work List', newListItem: workItem});
 // });
 
-app.post("/work", (req, res) => {
-  const item = req.body.addItem;
-  workItem.push(item);
-  res.redirect("/work");
-});
+// app.post("/work", (req, res) => {
+//   const item = req.body.addItem;
+//   workItem.push(item);
+//   res.redirect("/work");
+// });
 
 app.get("/about", (req, res) => {
   res.render("about");
