@@ -19,6 +19,7 @@ app.set("view engine", "ejs");
 
 mongoose.set("strictQuery", false);
 const password = process.env.PASS;
+console.log(password);
 
 mongoose
   .connect(
