@@ -11,8 +11,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 mongoose.set("strictQuery", false);
+const password = process.env.PASS;
+
 mongoose
-  .connect("mongodb+srv://Kundan7:IXMJF9788JTJBmnP@cluster0.sk1g6fg.mongodb.net/todolistDB", {
+  .connect(`mongodb+srv://Kundan7:${password}@cluster0.sk1g6fg.mongodb.net/todolistDB`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
