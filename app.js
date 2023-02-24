@@ -19,7 +19,6 @@ app.set("view engine", "ejs");
 
 mongoose.set("strictQuery", false);
 const password = process.env.PASS;
-console.log(password);
 
 mongoose
   .connect(
@@ -71,6 +70,8 @@ const List = mongoose.model("list", listSchema);
 
 // const items = ['Buy Food', 'Cook Food', 'Eat Food'];
 // const workItem = [];
+
+const day = date.getDate();
 
 app.get("/", (req, res) => {
   Item.find({}, (err, foundItems) => {
