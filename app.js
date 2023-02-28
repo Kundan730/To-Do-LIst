@@ -4,7 +4,6 @@ const date = require(__dirname + "/date.js");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const _ = require("lodash");
-
 console.log(date.getDate());
 
 const app = express();
